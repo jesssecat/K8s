@@ -29,7 +29,7 @@ wget -P /etc/yum.repos.d/ https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.
 
 rpm --import /etc/yum.repos.d/yum-key.gpg
 
-#yum install -y docker-ce kubelet kubeadm kubectl
+yum install -y docker-ce kubelet kubeadm kubectl
 
 sed -i '8i\Environment="HTTPS_PROXY=http://www.ik8s.io:10080"' /usr/lib/systemd/system/docker.service
 
@@ -38,6 +38,9 @@ systemctl daemon-reload
 systemctl start docker
 systemctl start kubelet
 
-echo KUBELET_EXTRA_ARGS="--fail-swap-on=false" >/etc/sysconfig/kubelet
+echo KUBELET_EXTRA_ARGS=\"--fail-swap-on=false\" >/etc/sysconfig/kubelet
+
+echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+echo 1 > /proc/sys/net/ipv4/ip_forward
 
 systemctl enable docker kubelet
